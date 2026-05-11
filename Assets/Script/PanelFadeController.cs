@@ -58,6 +58,9 @@ public class PanelFadeController : MonoBehaviour
             yield return null;
         }
 
+        from.alpha = 1;
+        from.interactable = true;
+        from.blocksRaycasts = true;
         from.gameObject.SetActive(false);
     }
 }
