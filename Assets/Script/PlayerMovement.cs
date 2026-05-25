@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem; // Thư viện bắt buộc
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -22,22 +23,34 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Nếu đang mở chuột (UI mode) → không di chuyển
-        if (!mouseLook.IsLocked()) return;
+        // Nếu chuột không khóa (đang hiện menu) -> không di chuyển
+        if (mouseLook != null && !mouseLook.IsLocked()) return;
 
-        // Check ground
+        // 1. Kiểm tra mặt đất
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundLayer);
 
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
+        // 2. Xử lý di chuyển (Thay thế cho Input.GetAxis)
+        float x = 0;
+        float z = 0;
 
+        if (Keyboard.current != null)
+        {
+            // Kiểm tra các phím đơn lẻ
+            if (Keyboard.current.wKey.isPressed) z += 1f;
+            if (Keyboard.current.sKey.isPressed) z -= 1f;
+            if (Keyboard.current.aKey.isPressed) x -= 1f;
+            if (Keyboard.current.dKey.isPressed) x += 1f;
+        }
+
+        // Tính toán hướng di chuyển dựa trên hướng camera (orientation)
         Vector3 move = orientation.forward * z + orientation.right * x;
-        move.y = 0;
+        move.y = 0; // Giữ nhân vật không bị bay lên khi nhìn lên trời
 
-        rb.velocity = new Vector3(move.x * speed, rb.velocity.y, move.z * speed);
+        // Áp dụng vận tốc
+        rb.velocity = new Vector3(move.normalized.x * speed, rb.velocity.y, move.normalized.z * speed);
 
-        // Nhảy
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        // 3. Xử lý nhảy (Thay thế cho Input.GetKeyDown)
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
         }

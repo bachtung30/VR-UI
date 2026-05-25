@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Lesson5.unity
     guid: 84fc456d49e39ba439bf4e563e088f43
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: c83796a1106ac024a8bf588a1fa5bc62, type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 634f7828412be1b44a64338210cfa136, type: 2}
+    xr.sdk.mock-hmd.settings: {fileID: 11400000, guid: 76365ccb016945e4eaae30372bb33c7b, type: 2}
