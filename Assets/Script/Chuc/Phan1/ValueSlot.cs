@@ -17,24 +17,32 @@ public class ValueSlot : MonoBehaviour
     public int minValue = -9;
     public int maxValue = 9;
 
-    private MoleculeValueManager manager;
+    private MoleculeValueManager moleculeManager;
+    private RedoxValueManager redoxManager;
 
     private void Awake()
     {
-        manager = GetComponentInParent<MoleculeValueManager>();
+        moleculeManager = GetComponentInParent<MoleculeValueManager>();
+        redoxManager = GetComponentInParent<RedoxValueManager>();
         RefreshUI();
         SetSelected(false);
     }
 
     public void SelectSlot()
     {
-        if (manager == null)
+        if (moleculeManager != null)
         {
-            Debug.LogWarning(gameObject.name + " has no manager!");
+            moleculeManager.SetSelectedSlot(this);
             return;
         }
 
-        manager.SetSelectedSlot(this);
+        if (redoxManager != null)
+        {
+            redoxManager.SetSelectedSlot(this);
+            return;
+        }
+
+        Debug.LogWarning(gameObject.name + " has no supported manager!");
     }
 
     public void Increase()
@@ -65,6 +73,12 @@ public class ValueSlot : MonoBehaviour
 
     public void RefreshUIFromManager()
     {
+        RefreshUI();
+    }
+
+    public void ResetValue()
+    {
+        value = 0;
         RefreshUI();
     }
 
